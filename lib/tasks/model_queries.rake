@@ -26,17 +26,18 @@ namespace :db do
     puts("Query 2")
     c = Customer.first
     r = c.tickets.joins(:ticket_type).select(:event_id).distinct.count
-    print("diferent events of a given customer ")
+    print("count of diferent events that a given customer attend")
     puts(r)
     puts("EOQ")
     puts("Query 3")
+    print("events of a given customer :")
     res = Event.joins(ticket_types: {tickets: {order: :customer}}).where('customers.age'=> 18)
     puts(res.name)
     puts("EOQ")
     puts("Query 4")
     #eventstats is empty
     ret = EventStat.joins(:event).select(:ticket_sold).where('event_id'=>1)
-    print("Ticketssold for event given event ")
+    print("Ticketssold for given event ")
     puts(ret)
     puts("EOQ")
     puts("Query 5")
@@ -48,10 +49,12 @@ namespace :db do
     print("count of Females that atend the followin events ")
     ri = Event.joins(ticket_types: {tickets: {order: :customer}}).group("event_id").where('customers.gender'=>"f").count
     puts(ri)
+    #its missing the order and pick first
     puts("EOQ")
     puts("Query 7")
     rii = Event.joins(ticket_types: {tickets: {order: :customer}}).group("event_id").where('customers.age >? AND customers.age<?',18,30).count
-    print("Count of customers in between 18 and 30 years that went to an event ")
+    print("Count of customers in between 18 and 30 years by event")
+    #its missing the order and pick first
     puts(rii)
     puts("EOQ")
   end
