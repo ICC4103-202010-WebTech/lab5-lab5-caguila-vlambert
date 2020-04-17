@@ -15,9 +15,44 @@ namespace :db do
   task :model_queries => :environment do
     # Sample query: Get the names of the events available and print them out.
     # Always print out a title for your query
-    puts("Query 0: Sample query; show the names of the events available")
-    result = Event.select(:name).distinct.map { |x| x.name }
+    
+    puts("Query 1")
+    c = Customer.first
+    result = c.tickets.count
+    print("total tickets of given customer ")
     puts(result)
-    puts("EOQ") # End Of Query -- always add this line after a query.
+    #puts("EOQ") # End Of Query -- always add this line after a query.
+    puts("EOQ")
+    puts("Query 2")
+    c = Customer.first
+    r = c.tickets.joins(:ticket_type).select(:event_id).distinct.count
+    print("diferent events of a given customer ")
+    puts(r)
+    puts("EOQ")
+    puts("Query 3")
+    res = Event.joins(ticket_types: {tickets: {order: :customer}}).where('customers.age'=> 18)
+    puts(res.name)
+    puts("EOQ")
+    puts("Query 4")
+    #eventstats is empty
+    ret = EventStat.joins(:event).select(:ticket_sold).where('event_id'=>1)
+    print("Ticketssold for event given event ")
+    puts(ret)
+    puts("EOQ")
+    puts("Query 5")
+    rr = Event.joins(ticket_types: :tickets).group("event_id").where('id'=>2).count
+    print("total number of tickets sold for an event ")
+    puts(rr)
+    puts("EOQ")
+    puts("Query 6")
+    print("count of Females that atend the followin events ")
+    ri = Event.joins(ticket_types: {tickets: {order: :customer}}).group("event_id").where('customers.gender'=>"f").count
+    puts(ri)
+    puts("EOQ")
+    puts("Query 7")
+    rii = Event.joins(ticket_types: {tickets: {order: :customer}}).group("event_id").where('customers.age >? AND customers.age<?',18,30).count
+    print("Count of customers in between 18 and 30 years that went to an event ")
+    puts(rii)
+    puts("EOQ")
   end
 end
